@@ -21,7 +21,7 @@ This repository contains a webpage, which should be checked out and deployed on 
     * Install NodeJS https://nodejs.org/en/download
     <br/>We will use this to get code dependencies
     
-2. Launch GitHub Desktop and clone this code repository to your computer
+2. Launch GitHub Desktop and clone this code repository to your computer (File -> Clone Repository -> URL)
     <br/>https://github.com/taphos/game-graphics-course-2023
     
 3. Open cloned repo in VSCode (GitHub Desktop -> Repository -> Open in VSCode)
@@ -30,7 +30,7 @@ This repository contains a webpage, which should be checked out and deployed on 
 
 5. Get code dependencies, Terminal: `npm install` 
 
-6. Start the course web site, Terminal `npm run serve`
+6. Start the course web site, Terminal: `npm run serve`
 
 7. Open link in Chrome http://localhost:8080
 
