@@ -7,12 +7,12 @@ import {positions, normals, indices} from "../blender/monkey.js"
 // **               Light configuration                **
 // ******************************************************
 
-let baseColor = vec3.fromValues(1.0, 0.1, 0.2);
-let ambientLightColor = vec3.fromValues(0.1, 0.1, 1.0);
-let numberOfPointLights = 2;
-let pointLightColors = [vec3.fromValues(1.0, 1.0, 1.0), vec3.fromValues(0.02, 0.4, 0.5)];
-let pointLightInitialPositions = [vec3.fromValues(5, 0, 2), vec3.fromValues(-5, 0, 2)];
-let pointLightPositions = [vec3.create(), vec3.create()];
+let baseColor = vec3.fromValues(0.3, 0.6, 0.5);
+let ambientLightColor = vec3.fromValues(0.5, 1.0, 1.0);
+let numberOfPointLights = 3;
+let pointLightColors = [vec3.fromValues(1.0, 1.0, 1.0), vec3.fromValues(0.02, 0.4, 0.5), vec3.fromValues(0.5, 0.5, 0.5)];
+let pointLightInitialPositions = [vec3.fromValues(5, 0, 2), vec3.fromValues(-5, 0, 2), vec3.fromValues(0, 0, 3)];
+let pointLightPositions = [vec3.create(), vec3.create(), vec3.create()];
 
 
 // language=GLSL
@@ -27,10 +27,10 @@ let lightCalculationShader = `
     // This function calculates light reflection using Phong reflection model (ambient + diffuse + specular)
     vec4 calculateLights(vec3 normal, vec3 position) {
         float ambientIntensity = 0.5;
-        float diffuseIntensity = 1.0;
-        float specularIntensity = 2.0;
-        float specularPower = 100.0;
-        float metalness = 0.0;
+        float diffuseIntensity = 0.5;
+        float specularIntensity = 1.0;
+        float specularPower = 60.0;
+        float metalness = 1.0;
 
         vec3 viewDirection = normalize(cameraPosition.xyz - position);
         vec3 color = baseColor * ambientLightColor * ambientIntensity;
@@ -120,7 +120,7 @@ let drawCall = app.createDrawCall(program, vertexArray)
     .uniform("baseColor", baseColor)
     .uniform("ambientLightColor", ambientLightColor);
 
-let cameraPosition = vec3.fromValues(0, 0, 4);
+let cameraPosition = vec3.fromValues(0, 0, 6);
 mat4.fromXRotation(modelMatrix, -Math.PI / 2);
 
 const positionsBuffer = new Float32Array(numberOfPointLights * 3);
