@@ -4,11 +4,11 @@ import {positions, normals, indices} from "../blender/ruby.js"
 import {positions as planePositions, uvs as planeUvs, indices as planeIndices} from "../blender/plane.js"
 
 let lightPosition = vec3.fromValues(0.0, 5.0, 0.0);
-let lightColor = vec3.fromValues(0.0, 1.0, 0.0);
-let ambientColor = vec3.fromValues(1.0, 1.0, 0.);
-let diffuseColor = vec3.fromValues(0.0, 1.0, 0.0);
-let specularColor = vec3.fromValues(1.0, 1.0, 1.0);
-let shininess = 32.0;
+let lightColor = vec3.fromValues(1.0, 0.0, 0.0);
+let ambientColor = vec3.fromValues(1.0, 0.0, 0.);
+let diffuseColor = vec3.fromValues(1.0, 0.0, 0.0);
+let specularColor = vec3.fromValues(1.0, 0.0, 0.0);
+let shininess = 1.0;
 
 
 let fragmentShader = `
@@ -205,7 +205,7 @@ let skyboxDrawCall = app.createDrawCall(skyboxProgram, skyboxArray)
 
 let mirrorDrawCall = app.createDrawCall(mirrorProgram, mirrorArray)
     .texture("reflectionTex", reflectionColorTarget)
-    .texture("distortionMap", app.createTexture2D(await loadTexture("waves.png")));
+    .texture("distortionMap", app.createTexture2D(await loadTexture("mirrortexture.jpg")));
 
 function renderReflectionTexture()
 {
