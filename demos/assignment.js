@@ -272,7 +272,8 @@ function draw(timems) {
     mat4.fromXRotation(rotateXMatrix, 0.3);
     mat4.fromYRotation(rotateYMatrix, time * 0.2354);
     mat4.mul(mirrorModelMatrix, rotateYMatrix, rotateXMatrix);
-    mat4.translate(mirrorModelMatrix, mirrorModelMatrix, vec3.fromValues(0, -1, 0));
+    mat4.translate(mirrorModelMatrix, mirrorModelMatrix, vec3.fromValues(0, -1.5, 0));
+    mat4.scale(mirrorModelMatrix, mirrorModelMatrix, vec3.fromValues(1.5, 1.5, 1.5));
 
     drawCall.uniform("lightPosition", lightPosition);
     drawCall.uniform("lightColor", lightColor);
