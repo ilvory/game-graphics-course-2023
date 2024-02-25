@@ -10,7 +10,6 @@ let diffuseColor = vec3.fromValues(1.0, 0.0, 0.0);
 let specularColor = vec3.fromValues(1.0, 0.0, 0.0);
 let shininess = 1.0;
 
-
 let fragmentShader = `
     #version 300 es
     precision highp float;
@@ -73,7 +72,17 @@ let mirrorFragmentShader = `
     {                        
         vec2 screenPos = gl_FragCoord.xy / screenSize;
         screenPos.x += (texture(distortionMap, vUv).r - 0.5) * 0.1;
-        outColor = texture(reflectionTex, screenPos);
+        // Blur post-processing effect
+        vec4 color = vec4(0.0);
+        float weight = 0.0;
+        for(float x = -4.0; x <= 4.0; x++) {
+            for(float y = -4.0; y <= 4.0; y++) {
+                vec2 offset = vec2(x, y) / screenSize;
+                color += texture(reflectionTex, screenPos + offset);
+                weight += 1.0;
+            }
+        }
+        outColor = color / weight;
     }
 `;
 
