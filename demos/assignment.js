@@ -72,9 +72,8 @@ let mirrorFragmentShader = `
     out vec4 outColor;
 
     void main()
-    {                        
-        // Calculate distortion amount based on UV coordinates and time
-        float distortionStrength = 0.13;
+    {                     
+        float distortionStrength = 0.13; // mirror tex distortion!!!   
         vec2 distortionUV = vUv + vec2(
             cos((vUv.y + time * 0.1) * 20.0) * distortionStrength,
             sin((vUv.x + time * 0.1) * 20.0) * distortionStrength
@@ -84,14 +83,13 @@ let mirrorFragmentShader = `
         vec2 distortedUV = vUv + displacement;
         vec3 color = texture(reflectionTex, distortedUV).rgb;
 
-        // kromatik
-        vec2 uvR = distortedUV + vec2(0.3, 0.0);
+        vec2 uvR = distortedUV + vec2(0.3, 0.0); // kromatik
         vec2 uvG = distortedUV;
         vec2 uvB = distortedUV - vec2(0.3, 0.0);
         vec3 colorR = texture(reflectionTex, uvR).rgb;
         vec3 colorG = texture(reflectionTex, uvG).rgb;
         vec3 colorB = texture(reflectionTex, uvB).rgb;
-        vec3 finalColor = vec3(colorR.r, colorG.g, colorB.b); // combine
+        vec3 finalColor = vec3(colorR.r, colorG.g, colorB.b); // combine all
 
         outColor = vec4(finalColor, 1.0);
     }
@@ -227,7 +225,7 @@ let skyboxDrawCall = app.createDrawCall(skyboxProgram, skyboxArray)
 
 let mirrorDrawCall = app.createDrawCall(mirrorProgram, mirrorArray)
     .texture("reflectionTex", reflectionColorTarget)
-    .texture("distortionMap", app.createTexture2D(await loadTexture("mirrortexture.jpg")));
+    .texture("distortionMap", app.createTexture2D(await loadTexture("mirrortexture.jpg"))); // :)
 
 function renderReflectionTexture()
 {
@@ -279,20 +277,23 @@ function drawMirror() {
 }
 
 function draw(timems) {
-    let time = timems * 0.0025;
+    let time = timems * 0.004;
 
     mat4.perspective(projMatrix, Math.PI / 2.5, app.width / app.height, 0.1, 100.0);
-    vec3.rotateY(cameraPosition, vec3.fromValues(0, 1, 5), vec3.fromValues(0, 0, 0), time * 0.05);
+    vec3.rotateY(cameraPosition, vec3.fromValues(0, 1, 5), vec3.fromValues(0, 0, 0), time * 0.1);
     mat4.lookAt(viewMatrix, cameraPosition, vec3.fromValues(0, -0.5, 0), vec3.fromValues(0, 1, 0));
 
     mat4.fromXRotation(rotateXMatrix, time * 0.1136 - Math.PI / 2);
-    mat4.fromZRotation(rotateYMatrix, time * 0.2235);
+    mat4.fromZRotation(rotateYMatrix, time * 0.1235);
     mat4.mul(modelMatrix, rotateXMatrix, rotateYMatrix);
 
     mat4.scale(modelMatrix, modelMatrix, vec3.fromValues(0.7, 0.275, 0.7));
 
-    mat4.fromXRotation(rotateXMatrix, 0.3);
-    mat4.fromYRotation(rotateYMatrix, time * 0.2354);
+    mat4.fromXRotation(rotateXMatrix, 0.2);
+    var angle = Math.sin(time * 0.1) * Math.PI * 0.3; // sin rotat
+    angle %= Math.PI * 0.3; // I wanted to limit the angle of rotation and the render turned out to be boring but i still left it here just made it same as before
+    mat4.fromYRotation(rotateYMatrix, angle);
+
     mat4.mul(mirrorModelMatrix, rotateYMatrix, rotateXMatrix);
     mat4.translate(mirrorModelMatrix, mirrorModelMatrix, vec3.fromValues(0, -1.5, 0));
     mat4.scale(mirrorModelMatrix, mirrorModelMatrix, vec3.fromValues(1.5, 1.5, 1.5));
