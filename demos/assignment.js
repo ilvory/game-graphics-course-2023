@@ -4,10 +4,10 @@ import {positions, normals, indices} from "../blender/ruby.js"
 import {positions as planePositions, uvs as planeUvs, indices as planeIndices} from "../blender/plane.js"
 
 let lightPosition = vec3.fromValues(0.0, 5.0, 0.0);
-let lightColor = vec3.fromValues(1.0, 0.0, 0.0);
-let ambientColor = vec3.fromValues(1.0, 0.0, 0.);   // PHONGGGGG
-let diffuseColor = vec3.fromValues(1.0, 0.0, 0.0);
-let specularColor = vec3.fromValues(1.0, 0.0, 0.0);
+let lightColor = vec3.fromValues(10.0, 0.0, 0.0);
+let ambientColor = vec3.fromValues(1.0, 0.0, 0.0);   // PHONGGGGG
+let diffuseColor = vec3.fromValues(10.0, 1.0, 1.0);
+let specularColor = vec3.fromValues(13.0, 2.0, 2.0);
 let shininess = 1.0;
 
 
@@ -74,7 +74,7 @@ let mirrorFragmentShader = `
     void main()
     {                        
         // Calculate distortion amount based on UV coordinates and time
-        float distortionStrength = 0.15;
+        float distortionStrength = 0.13;
         vec2 distortionUV = vUv + vec2(
             cos((vUv.y + time * 0.1) * 20.0) * distortionStrength,
             sin((vUv.x + time * 0.1) * 20.0) * distortionStrength
