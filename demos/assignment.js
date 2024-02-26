@@ -5,10 +5,11 @@ import {positions as planePositions, uvs as planeUvs, indices as planeIndices} f
 
 let lightPosition = vec3.fromValues(0.0, 5.0, 0.0);
 let lightColor = vec3.fromValues(1.0, 0.0, 0.0);
-let ambientColor = vec3.fromValues(1.0, 0.0, 0.);
+let ambientColor = vec3.fromValues(1.0, 0.0, 0.);   // PHONGGGGG
 let diffuseColor = vec3.fromValues(1.0, 0.0, 0.0);
 let specularColor = vec3.fromValues(1.0, 0.0, 0.0);
 let shininess = 1.0;
+
 
 let fragmentShader = `
     #version 300 es
@@ -66,25 +67,37 @@ let mirrorFragmentShader = `
     uniform sampler2D reflectionTex;
     uniform sampler2D distortionMap;
     uniform vec2 screenSize;
+    uniform float time; // Time uniform for animation
     in vec2 vUv;        
     out vec4 outColor;
+
     void main()
     {                        
-        vec2 screenPos = gl_FragCoord.xy / screenSize;
-        screenPos.x += (texture(distortionMap, vUv).r - 0.5) * 0.1;
-        // Blur post-processing effect
-        vec4 color = vec4(0.0);
-        float weight = 0.0;
-        for(float x = -4.0; x <= 4.0; x++) {
-            for(float y = -4.0; y <= 4.0; y++) {
-                vec2 offset = vec2(x, y) / screenSize;
-                color += texture(reflectionTex, screenPos + offset);
-                weight += 1.0;
-            }
-        }
-        outColor = color / weight;
+        // Calculate distortion amount based on UV coordinates and time
+        float distortionStrength = 0.15;
+        vec2 distortionUV = vUv + vec2(
+            cos((vUv.y + time * 0.1) * 20.0) * distortionStrength,
+            sin((vUv.x + time * 0.1) * 20.0) * distortionStrength
+        );
+
+        vec2 displacement = (texture(distortionMap, distortionUV).rg - 0.5) * 0.07;
+        vec2 distortedUV = vUv + displacement;
+        vec3 color = texture(reflectionTex, distortedUV).rgb;
+
+        // kromatik
+        vec2 uvR = distortedUV + vec2(0.3, 0.0);
+        vec2 uvG = distortedUV;
+        vec2 uvB = distortedUV - vec2(0.3, 0.0);
+        vec3 colorR = texture(reflectionTex, uvR).rgb;
+        vec3 colorG = texture(reflectionTex, uvG).rgb;
+        vec3 colorB = texture(reflectionTex, uvB).rgb;
+        vec3 finalColor = vec3(colorR.r, colorG.g, colorB.b); // combine
+
+        outColor = vec4(finalColor, 1.0);
     }
 `;
+
+
 
 let mirrorVertexShader = `
     #version 300 es
@@ -109,8 +122,8 @@ let skyboxFragmentShader = `
     in vec4 v_position;
     out vec4 outColor;
     void main() {
-      vec4 t = viewProjectionInverse * v_position;
-      outColor = texture(cubemap, normalize(t.xyz / t.w));
+        vec4 t = viewProjectionInverse * v_position;
+        outColor = texture(cubemap, normalize(t.xyz / t.w));
     }
 `;
 
@@ -266,7 +279,7 @@ function drawMirror() {
 }
 
 function draw(timems) {
-    let time = timems * 0.003;
+    let time = timems * 0.0025;
 
     mat4.perspective(projMatrix, Math.PI / 2.5, app.width / app.height, 0.1, 100.0);
     vec3.rotateY(cameraPosition, vec3.fromValues(0, 1, 5), vec3.fromValues(0, 0, 0), time * 0.05);
