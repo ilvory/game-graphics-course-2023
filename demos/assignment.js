@@ -83,7 +83,7 @@ let mirrorFragmentShader = `
         vec2 distortedUV = vUv + displacement;
         vec3 color = texture(reflectionTex, distortedUV).rgb;
 
-        vec2 uvR = distortedUV + vec2(0.1, 0.1); // kromatik
+        vec2 uvR = distortedUV + vec2(0.2, 0.2); // kromatik
         vec2 uvG = distortedUV;
         vec2 uvB = distortedUV - vec2(0.4, 0.4);
         vec3 colorR = texture(reflectionTex, uvR).rgb;
